@@ -9,6 +9,8 @@ authors = [
 ]
 dependencies = [
     "vtk>=9.2.6",
+    "pip>=23.0.1",
+    "ipykernel>=6.21.3",
 ]
 requires-python = ">=3.10"
 license = {text = "MIT"}
