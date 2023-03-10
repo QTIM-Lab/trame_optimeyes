@@ -47,13 +47,31 @@ checkerWidget.On()
 
 # Setup trame server
 server = get_server()
-ctrl = server.controller
+state, ctrl = server.state, server.controller
+
+
+@state.change("widget_active")
+def on_widget_change(widget_active, **kwargs):
+    if widget_active:
+        checkerWidget.On()
+    else:
+        checkerWidget.Off()
+    ctrl.view_update()
+
 
 # Build UI
 with SinglePageLayout(server) as layout:
     with layout.toolbar as toolbar:
         layout.title.set_text("Checkboard Viewer")
         vuetify.VSpacer()
+        vuetify.VCheckbox(
+            v_model=("widget_active", True),
+            off_icon="mdi-gesture-tap",
+            on_icon="mdi-gesture-tap",
+            dense=True,
+            hide_details=True,
+            classes="my-0",
+        )
         with vuetify.VBtn(icon=True, click=ctrl.view_reset_camera):
             vuetify.VIcon("mdi-crop-free")
 
