@@ -8,8 +8,11 @@ from trame.ui.vuetify import SinglePageLayout
 
 images_path = "images"
 os.listdir(images_path)
-image1_name = os.path.join(images_path, "JPEGReader_1.png")
-image2_name = os.path.join(images_path, "JPEGReader_2.png")
+# image1_name = os.path.join(images_path, "JPEGReader_1.png")
+image1_name = os.path.join(images_path, "MRN 803567 2_fixed.jpg")
+# image2_name = os.path.join(images_path, "JPEGReader_2.png")
+image2_name = os.path.join(images_path, "MRN 803567 2_aff_registered.jpg")
+
 
 # Read Images
 image1 = itk.imread(image1_name)
