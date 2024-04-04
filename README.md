@@ -1,11 +1,16 @@
 # trame
 [Trame](https://kitware.github.io/trame/docs/index.html) tools and visualizations. An exploration.
 
+## Sample Data
+Dropbox (04_04_2024):
+  * [REFUGE_Challenge_Splits_Downloaded](https://www.dropbox.com/scl/fo/05yez0zl3qd5j43bs0yyo/h?rlkey=hhhvsfobhzd9wvbue30hg81tu&dl=0)
+  * [REFUGE_pure](https://www.dropbox.com/scl/fo/ihafmmi7xugainu2t4wgb/h?rlkey=v0luo9amqlobe1qtmkt5btzsi&dl=0)
+
 ## Docs here
 [https://kitware.github.io/vtk-examples/site/](https://kitware.github.io/vtk-examples/site/)
 
 ## JPEG Reader
-Hi Steve and Sebastien,
+Hi Stephen, Jared and Sebastien,
 
 I can read an image with the vtk.vtkJPEGReader method.
 

@@ -1,16 +1,16 @@
-[tool.pdm]
-
-[project]
-name = ""
-version = ""
+[tool.poetry]
+name = "trame-optimeyes"
+version = "0.1.0"
 description = ""
-authors = [
-    {name = "Benjamin", email = "bbearce@gmail.com"},
-]
-dependencies = [
-    "vtk>=9.2.6",
-    "pip>=23.0.1",
-    "ipykernel>=6.21.3",
-]
-requires-python = ">=3.10"
-license = {text = "MIT"}
+authors = ["Benjamin Bearce <bbearce@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+vtk = "^9.3.0"
+trame = "^3.5.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
