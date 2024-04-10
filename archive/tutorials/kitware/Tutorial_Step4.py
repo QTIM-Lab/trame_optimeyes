@@ -18,6 +18,7 @@
 # First access the VTK module (and any other needed modules) by importing them.
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkInteractionStyle
+
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkRenderingOpenGL2
 from vtkmodules.vtkCommonColor import vtkNamedColors
@@ -25,8 +26,9 @@ from vtkmodules.vtkFiltersSources import vtkConeSource
 from vtkmodules.vtkRenderingCore import (
     vtkActor,
     vtkPolyDataMapper,
+    vtkProperty,
     vtkRenderWindow,
-    vtkRenderer
+    vtkRenderer,
 )
 
 
@@ -35,7 +37,7 @@ def main(argv):
 
     #
     # Next we create an instance of vtkConeSource and set some of its
-    # properties. The instance of vtkConeSource 'cone' is part of a
+    # properties. The instance of vtkConeSource "cone" is part of a
     # visualization pipeline (it is a source process object) it produces data
     # (output type is vtkPolyData) which other filters may process.
     #
@@ -55,34 +57,51 @@ def main(argv):
     coneMapper.SetInputConnection(cone.GetOutputPort())
 
     #
-    # Create an actor to represent the cone. The actor orchestrates rendering
-    # of the mapper's graphics primitives. An actor also refers to properties
-    # via a vtkProperty instance, and includes an internal transformation
-    # matrix. We set this actor's mapper to be coneMapper which we created
-    # above.
+    # Create an actor to represent the first cone. The actor's properties are
+    # modified to give it different surface properties. By default, an actor
+    # is created with a property so the GetProperty() method can be used.
     #
     coneActor = vtkActor()
     coneActor.SetMapper(coneMapper)
-    coneActor.GetProperty().SetColor(colors.GetColor3d('MistyRose'))
+    coneActor.GetProperty().SetColor(0.2, 0.63, 0.79)
+    coneActor.GetProperty().SetDiffuse(0.7)
+    coneActor.GetProperty().SetSpecular(0.4)
+    coneActor.GetProperty().SetSpecularPower(20)
 
     #
-    # Create two renderers and assign actors to them. A renderer renders into
-    # a viewport within the vtkRenderWindow. It is part or all of a window on
-    # the screen and it is responsible for drawing the actors it has.  We also
-    # set the background color here. In this example we are adding the same
-    # actor to two different renderers it is okay to add different actors to
-    # different renderers as well.
+    # Create a property and directly manipulate it. Assign it to the
+    # second actor.
+    #
+    property = vtkProperty()
+    property.SetColor(colors.GetColor3d("Tomato"))
+    property.SetDiffuse(0.7)
+    property.SetSpecular(0.4)
+    property.SetSpecularPower(20)
+
+    #
+    # Create a second actor and a property. The property is directly
+    # manipulated and then assigned to the actor. In this way, a single
+    # property can be shared among many actors. Note also that we use the
+    # same mapper as the first actor did. This way we avoid duplicating
+    # geometry, which may save lots of memory if the geometry is large.
+    coneActor2 = vtkActor()
+    coneActor2.SetMapper(coneMapper)
+    coneActor2.GetProperty().SetColor(
+        colors.GetColor3d("LightSeaGreen")
+    )  # overwritten by next line
+    coneActor2.SetProperty(property)
+    coneActor2.SetPosition(0, 2, 0)
+
+    #
+    # Create the Renderer and assign actors to it. A renderer is like a
+    # viewport. It is part or all of a window on the screen and it is
+    # responsible for drawing the actors it has.  We also set the background
+    # color here.
     #
     ren1 = vtkRenderer()
     ren1.AddActor(coneActor)
-    ren1.SetBackground(colors.GetColor3d('RoyalBlue'))
-
-    ren1.SetViewport(0.0, 0.0, 0.5, 1.0) # (xmin,ymin,xmax,ymax), where each coordinate is 0 <= coordinate <= 1.0.
-
-    ren2 = vtkRenderer()
-    ren2.AddActor(coneActor)
-    ren2.SetBackground(colors.GetColor3d('DodgerBlue'))
-    ren2.SetViewport(0.5, 0.0, 1.0, 1.0) # (xmin,ymin,xmax,ymax), where each coordinate is 0 <= coordinate <= 1.0.
+    ren1.AddActor(coneActor2)
+    ren1.SetBackground(colors.GetColor3d("CornflowerBlue"))
 
     #
     # Finally we create the render window which will show up on the screen.
@@ -91,27 +110,20 @@ def main(argv):
     #
     renWin = vtkRenderWindow()
     renWin.AddRenderer(ren1)
-    renWin.AddRenderer(ren2)
-    renWin.SetSize(600, 300)
-    renWin.SetWindowName('Tutorial_Step3')
-
-    #
-    # Make one view 90 degrees from other.
-    #
-    ren1.ResetCamera()
-    ren1.GetActiveCamera().Azimuth(90)
+    renWin.SetSize(300, 300)
+    renWin.SetWindowName("Tutorial_Step4")
 
     #
     # Now we loop over 360 degrees and render the cones each time.
     #
     for i in range(0, 360):  # render the image
+        # render the image
         renWin.Render()
         # rotate the active camera by one degree
         ren1.GetActiveCamera().Azimuth(1)
-        ren2.GetActiveCamera().Azimuth(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
 
     main(sys.argv)

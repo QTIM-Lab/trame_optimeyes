@@ -23,19 +23,12 @@ from vtkmodules.vtkCommonTransforms import vtkTransform
 from vtkmodules.vtkFiltersSources import vtkConeSource
 from vtkmodules.vtkInteractionStyle import vtkInteractorStyleTrackballCamera
 from vtkmodules.vtkInteractionWidgets import vtkBoxWidget
-
-# Seed Widget
-from vtk import vtkPointHandleRepresentation2D
-from vtk import vtkSeedRepresentation
-from vtk import vtkSeedWidget
-from vtk import vtkSphereSource
-
 from vtkmodules.vtkRenderingCore import (
     vtkActor,
     vtkPolyDataMapper,
     vtkRenderWindow,
     vtkRenderWindowInteractor,
-    vtkRenderer
+    vtkRenderer,
 )
 
 
@@ -72,7 +65,7 @@ def main(argv):
     #
     coneActor = vtkActor()
     coneActor.SetMapper(coneMapper)
-    coneActor.GetProperty().SetColor(colors.GetColor3d('Bisque'))
+    coneActor.GetProperty().SetColor(colors.GetColor3d("Bisque"))
 
     #
     # Create the Renderer and assign actors to it. A renderer is like a
@@ -82,7 +75,7 @@ def main(argv):
     #
     ren1 = vtkRenderer()
     ren1.AddActor(coneActor)
-    ren1.SetBackground(colors.GetColor3d('MidnightBlue'))
+    ren1.SetBackground(colors.GetColor3d("MidnightBlue"))
 
     #
     # Finally we create the render window which will show up on the screen.
@@ -92,7 +85,7 @@ def main(argv):
     renWin = vtkRenderWindow()
     renWin.AddRenderer(ren1)
     renWin.SetSize(300, 300)
-    renWin.SetWindowName('Tutorial_Step6')
+    renWin.SetWindowName("Tutorial_Step6")
 
     #
     # The vtkRenderWindowInteractor class watches for events (e.g., keypress,
@@ -103,33 +96,14 @@ def main(argv):
     iren = vtkRenderWindowInteractor()
     iren.SetRenderWindow(renWin)
 
-    # Create the representation for the seed widget and for its handles
-    handleRep = vtkPointHandleRepresentation2D()
-    handleRep.GetProperty().SetColor(colors.GetColor3d('Black'))
-    widgetRep = vtkSeedRepresentation()
-    widgetRep.SetHandleRepresentation(handleRep)
-
-    # Create the seed widget
-    seedWidget = vtkSeedWidget()
-    seedWidget.SetInteractor(iren)
-    seedWidget.SetRepresentation(widgetRep)
-
-    seedWidget.On()
-    # seedWidget.Off()
-    renWin.Render()
-    iren.Start()
-
-    # vtkSeedWidget
-    # vtkSphereSource
-
     #
     # By default the vtkRenderWindowInteractor instantiates an instance
     # of vtkInteractorStyle. vtkInteractorStyle translates a set of events
     # it observes into operations on the camera, actors, and/or properties
     # in the vtkRenderWindow associated with the vtkRenderWinodwInteractor.
     # Here we specify a particular interactor style.
-    # style = vtkInteractorStyleTrackballCamera()
-    # iren.SetInteractorStyle(style)
+    style = vtkInteractorStyleTrackballCamera()
+    iren.SetInteractorStyle(style)
 
     #
     # Here we use a vtkBoxWidget to transform the underlying coneActor (by
@@ -141,38 +115,39 @@ def main(argv):
     # using the Command/Observer mechanism (AddObserver()). The place factor
     # controls the initial size of the widget with respect to the bounding box
     # of the input to the widget.
-    # boxWidget = vtkBoxWidget()
-    # boxWidget.SetInteractor(iren)
-    # boxWidget.SetPlaceFactor(1.25)
-    # boxWidget.GetOutlineProperty().SetColor(colors.GetColor3d('Gold'))
+    boxWidget = vtkBoxWidget()
+    boxWidget.SetInteractor(iren)
+    boxWidget.SetPlaceFactor(1.25)
+    boxWidget.GetOutlineProperty().SetColor(colors.GetColor3d("Gold"))
 
     #
     # Place the interactor initially. The input to a 3D widget is used to
     # initially position and scale the widget. The EndInteractionEvent is
     # observed which invokes the SelectPolygons callback.
     #
-    # boxWidget.SetProp3D(coneActor)
-    # boxWidget.PlaceWidget()
-    # callback = vtkMyCallback()
-    # boxWidget.AddObserver('InteractionEvent', callback)
+    boxWidget.SetProp3D(coneActor)
+    boxWidget.PlaceWidget()
+    callback = vtkMyCallback()
+    boxWidget.AddObserver("InteractionEvent", callback)
 
     #
     # Normally the user presses the 'i' key to bring a 3D widget to life. Here
     # we will manually enable it so it appears with the cone.
     #
-    # boxWidget.On()
+    boxWidget.On()
 
     #
     # Start the event loop.
     #
-    # iren.Initialize()
-    # iren.Start()
+    iren.Initialize()
+    iren.Start()
 
 
 class vtkMyCallback(object):
     """
     Callback for the interaction.
     """
+
     def __call__(self, caller, ev):
         t = vtkTransform()
         widget = caller
@@ -180,7 +155,7 @@ class vtkMyCallback(object):
         widget.GetProp3D().SetUserTransform(t)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
 
     main(sys.argv)

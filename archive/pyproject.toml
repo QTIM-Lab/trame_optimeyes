@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "trame-optimeyes"
+version = "0.1.0"
+description = ""
+authors = ["Benjamin Bearce <bbearce@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+vtk = "^9.3.0"
+trame = "^3.5.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

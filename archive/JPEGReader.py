@@ -1,9 +1,10 @@
 import os, vtk
+
 # Attempt with https://kitware.github.io/vtk-examples/site/Java/IO/JPEGReader/
 # vtk.vtkNativeLibrary # Didn't work, but maybe we don't need
 vtk.vtkRenderWindowInteractor
 # vtk.vtkImageReader2 # Need but we have already from vtk.vtkJPEGReader via inheritance
-vtk.vtkJPEGReader # inherits from vtk.vtkImageReader2
+vtk.vtkJPEGReader  # inherits from vtk.vtkImageReader2
 vtk.vtkNamedColors
 vtk.vtkImageViewer2
 
