@@ -18,6 +18,7 @@
 # First access the VTK module (and any other needed modules) by importing them.
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkInteractionStyle
+
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkRenderingOpenGL2
 from vtkmodules.vtkCommonColor import vtkNamedColors
@@ -26,7 +27,7 @@ from vtkmodules.vtkRenderingCore import (
     vtkActor,
     vtkPolyDataMapper,
     vtkRenderWindow,
-    vtkRenderer
+    vtkRenderer,
 )
 
 
@@ -45,21 +46,21 @@ def main(argv):
     coneMapper.SetInputConnection(cone.GetOutputPort())
     coneActor = vtkActor()
     coneActor.SetMapper(coneMapper)
-    coneActor.GetProperty().SetColor(colors.GetColor3d('MistyRose'))
+    coneActor.GetProperty().SetColor(colors.GetColor3d("MistyRose"))
 
     ren1 = vtkRenderer()
     ren1.AddActor(coneActor)
-    ren1.SetBackground(colors.GetColor3d('MidnightBlue'))
+    ren1.SetBackground(colors.GetColor3d("MidnightBlue"))
     ren1.ResetCamera()
 
     renWin = vtkRenderWindow()
     renWin.AddRenderer(ren1)
     renWin.SetSize(300, 300)
-    renWin.SetWindowName('Tutorial_Step2')
+    renWin.SetWindowName("Tutorial_Step2")
 
     # Here is where we setup the observer.
     mo1 = vtkMyCallback(ren1)
-    ren1.AddObserver('StartEvent', mo1)
+    ren1.AddObserver("StartEvent", mo1)
 
     #
     # Now we loop over 360 degrees and render the cone each time.
@@ -81,10 +82,10 @@ class vtkMyCallback(object):
 
     def __call__(self, caller, ev):
         position = self.renderer.GetActiveCamera().GetPosition()
-        print('({:5.2f}, {:5.2f}, {:5.2f})'.format(*position))
+        print("({:5.2f}, {:5.2f}, {:5.2f})".format(*position))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
 
     main(sys.argv)

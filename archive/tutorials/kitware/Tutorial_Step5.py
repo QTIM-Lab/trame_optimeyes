@@ -19,16 +19,14 @@
 # noinspection PyUnresolvedReferences
 import vtkmodules.vtkRenderingOpenGL2
 from vtkmodules.vtkCommonColor import vtkNamedColors
-from vtkmodules.vtkCommonTransforms import vtkTransform
 from vtkmodules.vtkFiltersSources import vtkConeSource
 from vtkmodules.vtkInteractionStyle import vtkInteractorStyleTrackballCamera
-from vtkmodules.vtkInteractionWidgets import vtkBoxWidget
 from vtkmodules.vtkRenderingCore import (
     vtkActor,
     vtkPolyDataMapper,
     vtkRenderWindow,
     vtkRenderWindowInteractor,
-    vtkRenderer
+    vtkRenderer,
 )
 
 
@@ -65,7 +63,7 @@ def main(argv):
     #
     coneActor = vtkActor()
     coneActor.SetMapper(coneMapper)
-    coneActor.GetProperty().SetColor(colors.GetColor3d('Bisque'))
+    coneActor.GetProperty().SetColor(colors.GetColor3d("Bisque"))
 
     #
     # Create the Renderer and assign actors to it. A renderer is like a
@@ -75,7 +73,7 @@ def main(argv):
     #
     ren1 = vtkRenderer()
     ren1.AddActor(coneActor)
-    ren1.SetBackground(colors.GetColor3d('MidnightBlue'))
+    ren1.SetBackground(colors.GetColor3d("MidnightBlue"))
 
     #
     # Finally we create the render window which will show up on the screen.
@@ -85,7 +83,7 @@ def main(argv):
     renWin = vtkRenderWindow()
     renWin.AddRenderer(ren1)
     renWin.SetSize(300, 300)
-    renWin.SetWindowName('Tutorial_Step6')
+    renWin.SetWindowName("Tutorial_Step5")
 
     #
     # The vtkRenderWindowInteractor class watches for events (e.g., keypress,
@@ -106,56 +104,26 @@ def main(argv):
     iren.SetInteractorStyle(style)
 
     #
-    # Here we use a vtkBoxWidget to transform the underlying coneActor (by
-    # manipulating its transformation matrix). Many other types of widgets
-    # are available for use, see the documentation for more details.
-    #
-    # The SetInteractor method is how 3D widgets are associated with the render
-    # window interactor. Internally, SetInteractor sets up a bunch of callbacks
-    # using the Command/Observer mechanism (AddObserver()). The place factor
-    # controls the initial size of the widget with respect to the bounding box
-    # of the input to the widget.
-    boxWidget = vtkBoxWidget()
-    boxWidget.SetInteractor(iren)
-    boxWidget.SetPlaceFactor(1.25)
-    boxWidget.GetOutlineProperty().SetColor(colors.GetColor3d('Gold'))
-
-    #
-    # Place the interactor initially. The input to a 3D widget is used to
-    # initially position and scale the widget. The EndInteractionEvent is
-    # observed which invokes the SelectPolygons callback.
-    #
-    boxWidget.SetProp3D(coneActor)
-    boxWidget.PlaceWidget()
-    callback = vtkMyCallback()
-    boxWidget.AddObserver('InteractionEvent', callback)
-
-    #
-    # Normally the user presses the 'i' key to bring a 3D widget to life. Here
-    # we will manually enable it so it appears with the cone.
-    #
-    boxWidget.On()
-
-    #
-    # Start the event loop.
+    # Unlike the previous scripts where we performed some operations and then
+    # exited, here we leave an event loop running. The user can use the mouse
+    # and keyboard to perform the operations on the scene according to the
+    # current interaction style. When the user presses the 'e' key, by default
+    # an ExitEvent is invoked by the vtkRenderWindowInteractor which is caught
+    # and drops out of the event loop (triggered by the Start() method that
+    # follows.
     #
     iren.Initialize()
     iren.Start()
 
-
-class vtkMyCallback(object):
-    """
-    Callback for the interaction.
-    """
-
-    def __call__(self, caller, ev):
-        t = vtkTransform()
-        widget = caller
-        widget.GetTransform(t)
-        widget.GetProp3D().SetUserTransform(t)
+    #
+    # Final note: recall that observers can watch for particular events and
+    # take appropriate action. Pressing 'u' in the render window causes the
+    # vtkRenderWindowInteractor to invoke a UserEvent. This can be caught to
+    # popup a GUI, etc. See the Tcl Cone5.tcl example for an idea of how this
+    # works.
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
 
     main(sys.argv)
