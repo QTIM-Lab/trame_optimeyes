@@ -53,6 +53,15 @@ class MainContent(vuetify.VMain):
                     icon=True,
                     size="small",
                     color="rgba(0,0,0,0)",
+                    click=self.server.controller.view_reset_color,
+                ):
+                    vuetify.VIcon("mdi-undo", classes="bg-black")
+                with vuetify.VBtn(
+                    density="compact",
+                    flat=True,
+                    icon=True,
+                    size="small",
+                    color="rgba(0,0,0,0)",
                     click=self.server.controller.view_reset_camera,
                 ):
                     vuetify.VIcon("mdi-crop-free", classes="bg-black")
