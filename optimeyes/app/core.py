@@ -1,6 +1,6 @@
 from pathlib import Path
 from trame.app import get_server
-from trame.decorators import TrameApp, change
+from trame.decorators import TrameApp, change, controller
 from trame.ui.vuetify3 import VAppLayout
 from trame.widgets.vuetify3 import VLayout
 
@@ -38,6 +38,18 @@ class OptimEyes:
         if self.active_directory:
             file_to_load = str(self.active_directory / batch_images[batch_selection[0]])
             self.annotation_engine.load_image(file_to_load)
+
+    @controller.set("view_reset_color")
+    def _on_window_level_reset(self):
+        self.annotation_engine.reset_color()
+
+    @change("tool_active")
+    def _on_interaction_mode_change(self, tool_active, **kwargs):
+        self.annotation_engine.select_interactor(tool_active)
+
+    @change("brush_color")
+    def _on_brush_color_change(self, brush_color, **kwargs):
+        self.annotation_engine.set_active_color(brush_color)
 
     def _build_ui(self):
         extra_args = {}
