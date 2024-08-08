@@ -27,73 +27,98 @@ class RightDrawer(vuetify.VNavigationDrawer):
             {"id": 4, "color": [0, 0, 255], "name": "Blue"},
         ]
         self.state.seg_class_active = [1]
+        self.state.polygons = [
+            {"id": 1, "color": [255, 0, 0], "name": "Red part 1"},
+            {"id": 2, "color": [255, 0, 0], "name": "Red part 2"},
+        ]
         # FIXME - end
 
         self.server.state.setdefault("brush_color", (255, 0, 0))
         with self:
-            with vuetify.VCard():
-                vuetify.VCardTitle("Segmentation classes")
-                with vuetify.VList(
-                    items=("seg_classes", []),
-                    item_title="name",
-                    item_value="id",
-                    density="compact",
-                    v_model_selected=("seg_class_active", None),
-                    mandatory=True,
-                    __properties=[("v_model_selected", "v-model:selected")],
-                ):
-                    with vuetify.Template(raw_attrs=['v-slot:prepend="{ item }"']):
-                        html.Div(
-                            classes="mr-2",
-                            style=(
-                                "`width: 1rem; height: 1rem; background: rgb(${item.color[0]}, ${item.color[1]}, ${item.color[2]}); border: solid 1px #333;`",
-                            ),
-                        )
-
-            with vuetify.VBtnToggle(v_model=("active_brush", "brush"), mandatory=True):
-                with vuetify.VBtn(value="navigation"):
-                    vuetify.VIcon("mdi-gesture-tap")
-                with vuetify.VBtn(value="eraser"):
-                    vuetify.VIcon("mdi-eraser")
-                with vuetify.VBtn(value="brush"):
-                    vuetify.VIcon("mdi-brush")
-                with vuetify.VBtn(value="polygon"):
-                    vuetify.VIcon("mdi-vector-polygon")
-
-            vuetify.VSlider(
-                v_model=("brush_size", 5),
-                min=1,
-                max=50,
-                step=1,
-                classes="mx-4",
-            )
-
-            with vuetify.VTabs(
-                v_model=("drawer_right_mode", "brush"),
-                align_tabs="center",
-                grow=True,
+            with vuetify.VExpansionPanels(
+                flat=True,
+                static=True,
+                multiple=True,
+                v_model=("panels", ["seg_classes"]),
             ):
-                with vuetify.VTab(value="brush"):
-                    vuetify.VIcon("mdi-brush")
-                with vuetify.VTab(value="polygon"):
-                    vuetify.VIcon("mdi-vector-polygon")
-            with vuetify.VWindow(v_model="drawer_right_mode"):
-                with vuetify.VWindowItem(value="brush"):
-                    with vuetify.VList():
-                        for c in COLORS:
-                            with vuetify.VListItem(
-                                click=f"brush_color = [{c[0]}, {c[1]}, {c[2]}, 255]"
+                with vuetify.VExpansionPanel(
+                    value="seg_classes",
+                    static=True,
+                    expand_icon="mdi-format-list-bulleted-type",
+                    title="Segmentation classes",
+                    classes="mt-0",
+                ):
+                    with vuetify.VExpansionPanelText(classes="px-0 mx-n6 py-0"):
+                        with vuetify.VList(
+                            items=("seg_classes", []),
+                            item_title="name",
+                            item_value="id",
+                            density="compact",
+                            v_model_selected=("seg_class_active", None),
+                            mandatory=True,
+                            __properties=[("v_model_selected", "v-model:selected")],
+                        ):
+                            with vuetify.Template(
+                                raw_attrs=['v-slot:prepend="{ item }"']
                             ):
-                                with html.Div(
-                                    classes="d-flex align-center justify-space-around"
+                                html.Div(
+                                    classes="mr-2",
+                                    style=(
+                                        "`width: 1rem; height: 1rem; background: rgb(${item.color[0]}, ${item.color[1]}, ${item.color[2]}); border: solid 1px #333;`",
+                                    ),
+                                )
+                with vuetify.VExpansionPanel(
+                    value="tools",
+                    static=True,
+                    expand_icon="mdi-brush",
+                    title="Tools",
+                    classes="mt-0",
+                ):
+                    with vuetify.VExpansionPanelText(classes="px-0 mx-n6 py-0"):
+                        with vuetify.VBtnToggle(
+                            v_model=("active_brush", "brush"),
+                            mandatory=True,
+                            density="compact",
+                        ):
+                            with vuetify.VBtn(value="navigation"):
+                                vuetify.VIcon("mdi-gesture-tap")
+                            with vuetify.VBtn(value="eraser"):
+                                vuetify.VIcon("mdi-eraser")
+                            with vuetify.VBtn(value="brush"):
+                                vuetify.VIcon("mdi-brush")
+                            with vuetify.VBtn(value="polygon"):
+                                vuetify.VIcon("mdi-vector-polygon")
+
+                        with html.Div(
+                            v_show="['eraser', 'brush'].includes(active_brush)"
+                        ):
+                            vuetify.VSlider(
+                                prepend_icon="mdi-brush",
+                                v_model=("brush_size", 5),
+                                min=1,
+                                max=50,
+                                step=1,
+                                classes="mx-4",
+                            )
+
+                        with html.Div(v_show="['polygon'].includes(active_brush)"):
+                            with vuetify.VList(
+                                items=("polygons", []),
+                                item_title="name",
+                                item_value="id",
+                                density="compact",
+                                v_model_selected=("polygon_active", None),
+                                __properties=[("v_model_selected", "v-model:selected")],
+                            ):
+                                with vuetify.Template(
+                                    raw_attrs=['v-slot:prepend="{ item }"']
                                 ):
                                     html.Div(
-                                        style=f"width: 1rem; height: 1rem; background: rgb({c[0]}, {c[1]}, {c[2]}); border: solid 1px #333;"
+                                        classes="mr-2",
+                                        style=(
+                                            "`width: 1rem; height: 1rem; background: rgb(${item.color[0]}, ${item.color[1]}, ${item.color[2]}); border: solid 1px #333;`",
+                                        ),
                                     )
-                                    vuetify.VListItemTitle("segmentation A")
-
-                with vuetify.VWindowItem(value="polygon"):
-                    html.Div("...polygon...")
 
     @property
     def state(self):
