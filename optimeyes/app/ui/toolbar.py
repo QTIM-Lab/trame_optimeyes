@@ -13,21 +13,15 @@ class Toolbar(vuetify.VAppBar):
                     vuetify.VIcon("mdi-eye-outline")
             vuetify.VAppBarTitle("OptimEYES")
 
-            with vuetify.VBtnToggle(v_model=("tool_active", "navigation")):
+            with vuetify.VBtnToggle(
+                v_model=("tool_active", "navigation"), mandatory=True
+            ):
                 with vuetify.VBtn(value="navigation"):
                     vuetify.VIcon("mdi-gesture-tap")
                 with vuetify.VBtn(value="ruler"):
                     vuetify.VIcon("mdi-ruler")
-                with vuetify.VBtn(value="eraser"):
-                    vuetify.VIcon("mdi-eraser")
                 with vuetify.VBtn(value="brush"):
                     vuetify.VIcon("mdi-brush")
-                with vuetify.VBtn(value="polygon"):
-                    vuetify.VIcon("mdi-vector-polygon")
-                with vuetify.VBtn(value="freeform_1"):
-                    vuetify.VIcon("mdi-gesture")
-                with vuetify.VBtn(value="freeform_2"):
-                    vuetify.VIcon("mdi-draw")
 
             vuetify.VSpacer()
 

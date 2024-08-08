@@ -43,8 +43,14 @@ class OptimEyes:
     def _on_window_level_reset(self):
         self.annotation_engine.reset_color()
 
-    @change("tool_active")
-    def _on_interaction_mode_change(self, tool_active, **kwargs):
+    @controller.set("update_brush_scale")
+    def _on_zoom_change(self):
+        self.annotation_engine.update_brush_scale()
+
+    @change("tool_active", "active_brush")
+    def _on_interaction_mode_change(self, tool_active, active_brush, **kwargs):
+        if tool_active == "brush":
+            tool_active = active_brush
         self.annotation_engine.select_interactor(tool_active)
 
     @change("brush_color")

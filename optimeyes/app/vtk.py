@@ -71,6 +71,10 @@ class AnnotationEngine:
     def update(self):
         self.server.controller.view_update()
 
+    @property
+    def brush_size(self):
+        return self.server.state.brush_size
+
     def set_active_color(self, color_rgba):
         self.active_color = color_rgba
         self.painting_canvas.SetDrawColor(*self.active_color)
@@ -78,11 +82,8 @@ class AnnotationEngine:
     def select_interactor(self, mode):
         if mode == "navigation":
             self.interactor.SetInteractorStyle(self.interactor_style_image)
-        elif mode == "brush":
+        elif mode in ["brush", "eraser"]:
             self.painting_canvas.SetDrawColor(*self.active_color)
-            self.interactor.SetInteractorStyle(self.interactor_style_paint)
-        elif mode == "eraser":
-            self.painting_canvas.SetDrawColor(0, 0, 0, 0)
             self.interactor.SetInteractorStyle(self.interactor_style_paint)
         else:
             self.interactor.SetInteractorStyle(self.interactor_style_image)
@@ -109,10 +110,23 @@ class AnnotationEngine:
             )
             i_1 = round(ijk[0])
             j_1 = round(ijk[1])
-            self.painting_canvas.FillTube(i_0, j_0, i_1, j_1, 5)
-            self.painting_canvas.DrawCircle(i_0, j_0, 5)
-            self.painting_canvas.DrawCircle(i_1, j_1, 5)
+            self.painting_canvas.FillTube(i_0, j_0, i_1, j_1, self.brush_size)
+            for r in range(2, 2 * self.brush_size):
+                self.painting_canvas.DrawCircle(i_0, j_0, r * 0.5)
+                self.painting_canvas.DrawCircle(i_1, j_1, r * 0.5)
             self.update()
+
+    def update_brush_scale(self):
+        vec3 = [0, 0, 0]
+        self.current_image.TransformContinuousIndexToPhysicalPoint(0, 0, 0, vec3)
+        self.renderer.SetWorldPoint([*vec3, 0])
+        self.renderer.WorldToDisplay()
+        xd0 = self.renderer.GetDisplayPoint()[0]
+        self.current_image.TransformContinuousIndexToPhysicalPoint(1, 1, 1, vec3)
+        self.renderer.SetWorldPoint([*vec3, 0])
+        self.renderer.WorldToDisplay()
+        xd1 = self.renderer.GetDisplayPoint()[0]
+        self.server.state.brush_scale = xd1 - xd0
 
     def reset_color(self):
         self.image_actor.GetProperty().SetColorLevel(127.5)
@@ -137,9 +151,7 @@ class AnnotationEngine:
             0, self.current_extent[1], 0, self.current_extent[3]
         )
         self.painting_canvas.SetDrawColor(255, 0, 0, 255)
-        self.painting_canvas.FillTube(
-            0, 0, self.current_extent[1], self.current_extent[3], 5
-        )
 
         self.reset_color()
         self.reset_camera()
+        self.update_brush_scale()
