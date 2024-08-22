@@ -26,5 +26,5 @@ class Toolbar(vuetify.VAppBar):
             vuetify.VSpacer()
 
             if reload:
-                with vuetify.VBtn(icon=True, click=reload):
+                with vuetify.VBtn(icon=True, click=reload, color="red"):
                     vuetify.VIcon("mdi-refresh")
