@@ -10,6 +10,7 @@ class MainContent(vuetify.VMain):
         self.server.state.brush_scale = 1
 
         with self:
+            # This is the black bar under main header
             with vuetify.VSystemBar(classes="bg-black"):
                 html.Div("Task: ...")
                 vuetify.VDivider(vertical=True, classes="mx-2", style="opacity: 0.8")
@@ -69,7 +70,7 @@ class MainContent(vuetify.VMain):
                     click=self.server.controller.view_reset_camera,
                 ):
                     vuetify.VIcon("mdi-crop-free", classes="bg-black")
-
+            
             with vtk.VtkRemoteView(
                 render_window,
                 interactive_ratio=1,

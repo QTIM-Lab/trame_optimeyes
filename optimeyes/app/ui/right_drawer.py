@@ -33,7 +33,7 @@ class RightDrawer(vuetify.VNavigationDrawer):
         # FIXME - begin
         self.state.seg_classes = [
             {"id": 1, "color": [255, 0, 0], "name": "Red"},
-            {"id": 2, "color": [255, 0, 255], "name": "Yellow"},
+            {"id": 2, "color": [255, 255, 0], "name": "Yellow"},
             {"id": 3, "color": [0, 255, 0], "name": "Green"},
             {"id": 4, "color": [0, 0, 255], "name": "Blue"},
         ]
